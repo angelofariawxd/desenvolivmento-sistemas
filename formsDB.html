@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gestão de Clientes</title>
+</head>
+<body>
+  <h2>Cadastro de Clientes</h2>
+  <input id="nome" placeholder="Nome" />
+  <input id="endereco" placeholder="Endereço" />
+  <input id="telefone" placeholder="Telefone" />
+  <button onclick="adicionarCliente()">Adicionar</button>
+
+  <h3>Lista de Clientes</h3>
+  <ul id="listaClientes"></ul>
+
+  <script>
+    function carregarClientes() {
+      const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+      const lista = document.getElementById('listaClientes');
+      lista.innerHTML = '';
+      clientes.forEach((cliente, index) => {
+        const item = document.createElement('li');
+        item.textContent = `${cliente.nome} - ${cliente.endereco} - ${cliente.telefone}`;
+        item.innerHTML += ` <button onclick="editarCliente(${index})">Editar</button>
+                            <button onclick="excluirCliente(${index})">Excluir</button>`;
+        lista.appendChild(item);
+      });
+    }
+
+    function adicionarCliente() {
+      const nome = document.getElementById('nome').value;
+      const endereco = document.getElementById('endereco').value;
+      const telefone = document.getElementById('telefone').value;
+      const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+      clientes.push({ nome, endereco, telefone });
+      localStorage.setItem('clientes', JSON.stringify(clientes));
+      carregarClientes();
+    }
+
+    function excluirCliente(index) {
+      const clientes = JSON.parse(localStorage.getItem('clientes'));
+      clientes.splice(index, 1);
+      localStorage.setItem('clientes', JSON.stringify(clientes));
+      carregarClientes();
+    }
+
+    function editarCliente(index) {
+      const clientes = JSON.parse(localStorage.getItem('clientes'));
+      const cliente = clientes[index];
+      document.getElementById('nome').value = cliente.nome;
+      document.getElementById('endereco').value = cliente.endereco;
+      document.getElementById('telefone').value = cliente.telefone;
+      excluirCliente(index);
+    }
+
+    carregarClientes();
+  </script>
+</body>
+</html>
